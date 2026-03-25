@@ -10,42 +10,34 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "AAnimal.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
 AAnimal::AAnimal() : type("AAnimal") {
-	std::cout << "AAnimal: Default constructor called" << std::endl;
+    std::cout << "AAnimal: Default constructor called" << std::endl;
 }
 
 AAnimal::AAnimal(std::string type) : type(type) {
-	std::cout << "AAnimal: Parameterized constructor called on " << type << std::endl;
+    std::cout << "AAnimal: Parameterized constructor called on " << type << std::endl;
 }
 
 AAnimal::AAnimal(const AAnimal& other) : type(other.type) {
-	std::cout << "AAnimal: Copy constructor called." << std::endl;
-
+    std::cout << "AAnimal: Copy constructor called." << std::endl;
 }
 
 AAnimal& AAnimal::operator=(const AAnimal& other) {
-	if (this != &other)
-		this->type = other.type;
-	std::cout << "AAnimal: Copy assignment operator called." << std::endl;
-	return (*this);
+    if (this != &other) this->type = other.type;
+    std::cout << "AAnimal: Copy assignment operator called." << std::endl;
+    return (*this);
 }
 
-AAnimal::~AAnimal() {
-	std::cout << "AAnimal: Destructor called on " << type << std::endl;
-}
+AAnimal::~AAnimal() { std::cout << "AAnimal: Destructor called on " << type << std::endl; }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
-std::string AAnimal::getType() const {
-	return (this->type);
-}
+std::string AAnimal::getType() const { return (this->type); }

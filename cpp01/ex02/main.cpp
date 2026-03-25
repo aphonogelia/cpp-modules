@@ -31,27 +31,26 @@ And then:
 #include <string>
 
 int main(void) {
+    std::string mystring;
+    std::string* mystringPTR;
+    std::string& mystringREF = mystring;
 
-	std::string mystring;
-	std::string* mystringPTR;
-	std::string& mystringREF = mystring;
+    mystring = "HI THIS IS BRAIN";
+    mystringPTR = &mystring;
 
-	mystring = "HI THIS IS BRAIN";
-	mystringPTR = &mystring;
+    std::cout << std::endl;
 
-	std::cout << std::endl;
+    std::cout << "Address of the string: " << &mystring << std::endl;
+    std::cout << "Address held by stringPTR: " << mystringPTR << std::endl;
+    std::cout << "Address held by stringREF: " << &mystringREF << std::endl;
 
-	std::cout << "Address of the string: " << &mystring << std::endl;
-	std::cout << "Address held by stringPTR: " << mystringPTR << std::endl;
-	std::cout << "Address held by stringREF: " << &mystringREF << std::endl;
+    std::cout << std::endl;
 
-	std::cout << std::endl;
+    std::cout << "Value of the string: " << mystring << std::endl;
+    std::cout << "Value pointed to by stringPTR: " << *mystringPTR << std::endl;
+    std::cout << "Value pointed to by stringREF: " << mystringREF << std::endl;
 
-	std::cout << "Value of the string: " << mystring << std::endl;
-	std::cout << "Value pointed to by stringPTR: " << *mystringPTR << std::endl;
-	std::cout << "Value pointed to by stringREF: " << mystringREF << std::endl;
+    std::cout << std::endl;
 
-	std::cout << std::endl;
-
-	return (0);
+    return (0);
 }

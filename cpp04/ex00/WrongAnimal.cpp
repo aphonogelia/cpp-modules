@@ -10,46 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "WrongAnimal.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
 WrongAnimal::WrongAnimal() : type("WrongCat") {
-	std::cout << "WrongAnimal: Default constructor called" << std::endl;
+    std::cout << "WrongAnimal: Default constructor called" << std::endl;
 }
 
 WrongAnimal::WrongAnimal(std::string type) : type(type) {
-	std::cout << "WrongAnimal: Parameterized constructor called on " << type << std::endl;
+    std::cout << "WrongAnimal: Parameterized constructor called on " << type << std::endl;
 }
 
 WrongAnimal::WrongAnimal(const WrongAnimal& other) : type(other.type) {
-	std::cout << "WrongAnimal: Copy constructor called." << std::endl;
-
+    std::cout << "WrongAnimal: Copy constructor called." << std::endl;
 }
 
 WrongAnimal& WrongAnimal::operator=(const WrongAnimal& other) {
-	if (this != &other)
-		this->type = other.type;
-	std::cout << "WrongAnimal: Copy assignment operator called." << std::endl;
-	return (*this);
+    if (this != &other) this->type = other.type;
+    std::cout << "WrongAnimal: Copy assignment operator called." << std::endl;
+    return (*this);
 }
 
 WrongAnimal::~WrongAnimal() {
-	std::cout << "WrongAnimal: Destructor called on " << type << std::endl;
+    std::cout << "WrongAnimal: Destructor called on " << type << std::endl;
 }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
 void WrongAnimal::makeSound() const {
-	std::cout << type << " says CHEEP   CHEEP CHEEP     CHEEP" << std::endl;
+    std::cout << type << " says CHEEP   CHEEP CHEEP     CHEEP" << std::endl;
 }
 
-std::string WrongAnimal::getType() const {
-	return (this->type);
-}
+std::string WrongAnimal::getType() const { return (this->type); }

@@ -10,47 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 /* PresidentialPardonForm: Required grades: sign 25, exec 5
 Informs that <target> has been pardoned by Zaphod Beeblebrox.	*/
 
 #include "PresidentialPardonForm.hpp"
 
-  ///////////////
- //  Coplien  //
+///////////////
+//  Coplien  //
 ///////////////
 
-PresidentialPardonForm::PresidentialPardonForm() 
-		: AForm("PresidentialPardonForm", "undefined", 25, 5) {}
+PresidentialPardonForm::PresidentialPardonForm()
+    : AForm("PresidentialPardonForm", "undefined", 25, 5) {}
 
-PresidentialPardonForm::PresidentialPardonForm(const std::string& inputTarget) 
-		: AForm("PresidentialPardonForm", inputTarget, 25, 5) {} 
+PresidentialPardonForm::PresidentialPardonForm(const std::string& inputTarget)
+    : AForm("PresidentialPardonForm", inputTarget, 25, 5) {}
 
-PresidentialPardonForm::PresidentialPardonForm(const PresidentialPardonForm& other) 
-		:  AForm(other) {} 
-		
+PresidentialPardonForm::PresidentialPardonForm(const PresidentialPardonForm& other)
+    : AForm(other) {}
+
 PresidentialPardonForm& PresidentialPardonForm::operator=(const PresidentialPardonForm& other) {
-	if (this != &other) 
-		AForm::operator=(other);
-	return *this;
+    if (this != &other) AForm::operator=(other);
+    return *this;
 }
 
 PresidentialPardonForm::~PresidentialPardonForm() {
-	std::cout << "PresidentialPardonForm destructor called on " << getTarget() << std::endl;
+    std::cout << "PresidentialPardonForm destructor called on " << getTarget() << std::endl;
 }
 
-  ///////////////
- //  Function //
 ///////////////
-void PresidentialPardonForm::execute(const Bureaucrat& b) const{
+//  Function //
+///////////////
+void PresidentialPardonForm::execute(const Bureaucrat& b) const {
+    if (!getSignStatus()) throw FormNotSignedException();
 
-	if (!getSignStatus())
-		 throw FormNotSignedException();
-		
-	if (b.getGrade() > getExecGrade())
-		throw GradeTooLowException("Executor grade too low to execute.");
-	
-	std::cout << BLUE << getTarget() << " has been pardoned by Zaphod Beeblebrox." 
-		<< RESET << std::endl;
+    if (b.getGrade() > getExecGrade())
+        throw GradeTooLowException("Executor grade too low to execute.");
 
+    std::cout << BLUE << getTarget() << " has been pardoned by Zaphod Beeblebrox." << RESET
+              << std::endl;
 }

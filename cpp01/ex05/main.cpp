@@ -13,29 +13,23 @@
 #include "Harl.hpp"
 
 std::string uppercase(const std::string& string) {
-	
-	std::string newString = string;
-	
-	for (size_t i = 0; i < newString.length(); i++)
-		newString[i] = std::toupper(newString[i]);
-	
-	return (newString);
+    std::string newString = string;
+
+    for (size_t i = 0; i < newString.length(); i++) newString[i] = std::toupper(newString[i]);
+
+    return (newString);
 }
 
-int main(int argc, char **argv) {
-	
-	if (argc != 2) 	{
-		std::cout << "Please enter one action (DEBUG, INFO, WARNING or ERROR).\n";
-		return (1);
-	}
-	
-	Harl harl;
-	std::string message = uppercase(argv[1]);
-	
-	harl.complain(message);
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        std::cout << "Please enter one action (DEBUG, INFO, WARNING or ERROR).\n";
+        return (1);
+    }
 
-	return (0);
+    Harl harl;
+    std::string message = uppercase(argv[1]);
+
+    harl.complain(message);
+
+    return (0);
 }
-
-	
-	

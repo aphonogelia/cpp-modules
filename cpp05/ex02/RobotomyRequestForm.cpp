@@ -10,59 +10,51 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 /******************************************************************************
  RobotomyRequestForm: Required grades: sign 72, exec 45
 Makes some drilling noises, then informs that <target> has been robotomized
-successfully 50% of the time. Otherwise, it informs that the robotomy failed. 
+successfully 50% of the time. Otherwise, it informs that the robotomy failed.
 *******************************************************************************/
 
 #include "RobotomyRequestForm.hpp"
 
-#include <cstdlib> // for rand, srand
-#include <ctime>   // for time
+#include <cstdlib>  // for rand, srand
+#include <ctime>    // for time
 
-  ///////////////
- //  Coplien  //
+///////////////
+//  Coplien  //
 ///////////////
 
-RobotomyRequestForm::RobotomyRequestForm() 
-		: AForm("RobotomyRequestForm", "undefined", 72, 45) {}
+RobotomyRequestForm::RobotomyRequestForm() : AForm("RobotomyRequestForm", "undefined", 72, 45) {}
 
-RobotomyRequestForm::RobotomyRequestForm(const std::string& inputTarget) 
-		: AForm("RobotomyRequestForm", inputTarget, 72, 45) {} 
+RobotomyRequestForm::RobotomyRequestForm(const std::string& inputTarget)
+    : AForm("RobotomyRequestForm", inputTarget, 72, 45) {}
 
-RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& other) 
-		:  AForm(other) {} 
-		
+RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& other) : AForm(other) {}
+
 RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& other) {
-	if (this != &other) 
-		AForm::operator=(other);
-	return *this;
+    if (this != &other) AForm::operator=(other);
+    return *this;
 }
 
 RobotomyRequestForm::~RobotomyRequestForm() {
-	std::cout << "RobotomyRequestForm destructor called on " << getTarget() << std::endl;
+    std::cout << "RobotomyRequestForm destructor called on " << getTarget() << std::endl;
 }
 
-  ///////////////
- //  Function //
+///////////////
+//  Function //
 ///////////////
 void RobotomyRequestForm::execute(const Bureaucrat& b) const {
+    if (!getSignStatus()) throw FormNotSignedException();
 
-	if (!getSignStatus())
-		 throw FormNotSignedException();
-		
-	if (b.getGrade() > getExecGrade())
-		throw GradeTooLowException("Executor grade too low to execute.");
-	
-	std::cout << BLUE << "DRILLL.....DRILL....DRIIIIIILLLLLLLL"  << std::endl;
-	
-	std::srand(std::time(NULL));
-	if (std::rand() % 2)
-		std::cout << getTarget() << " has been robotomized successfully." << RESET << std::endl;
-	else
-		std::cout << "Robotomy failed on " << getTarget() << RESET << std::endl;
+    if (b.getGrade() > getExecGrade())
+        throw GradeTooLowException("Executor grade too low to execute.");
+
+    std::cout << BLUE << "DRILLL.....DRILL....DRIIIIIILLLLLLLL" << std::endl;
+
+    std::srand(std::time(NULL));
+    if (std::rand() % 2)
+        std::cout << getTarget() << " has been robotomized successfully." << RESET << std::endl;
+    else
+        std::cout << "Robotomy failed on " << getTarget() << RESET << std::endl;
 }
-
-

@@ -10,46 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <string>
 #include <algorithm>
 #include <cctype>
-#include "PhoneBook.hpp"
-#include "Contact.hpp"
+#include <iostream>
+#include <string>
 
- 
-void removeSpaces(std::string &str) 
-{
+#include "Contact.hpp"
+#include "PhoneBook.hpp"
+
+void removeSpaces(std::string &str) {
     str.erase(remove_if(str.begin(), str.end(), ::isspace), str.end());
 }
 
-int main(void) 
-{
-	PhoneBook phonebook;
-	std::string command;
+int main(void) {
+    PhoneBook phonebook;
+    std::string command;
 
-	std::cout  << std::endl;
-	while (true) 
-	{
-		std::cout  << "\033[32m";
-		std::cout << "Enter a command (ADD, SEARCH, EXIT): ";
-		std::cout << "\033[0m";
-		getline(std::cin, command);
-		removeSpaces(command);
-		
-		if (command == "EXIT") 
-			break;
-		else if (command == "ADD") 
-			phonebook.addContact();
-		else if (command == "SEARCH") 
-			phonebook.searchContact();
-		else 
-			std::cout << "Command invalid." << "\n\n";
-	}
-	return (0);
+    std::cout << std::endl;
+    while (true) {
+        std::cout << "\033[32m";
+        std::cout << "Enter a command (ADD, SEARCH, EXIT): ";
+        std::cout << "\033[0m";
+        getline(std::cin, command);
+        removeSpaces(command);
+
+        if (command == "EXIT")
+            break;
+        else if (command == "ADD")
+            phonebook.addContact();
+        else if (command == "SEARCH")
+            phonebook.searchContact();
+        else
+            std::cout << "Command invalid."
+                      << "\n\n";
+    }
+    return (0);
 }
-
-
-					
-
-

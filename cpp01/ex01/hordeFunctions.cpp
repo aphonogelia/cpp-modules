@@ -12,22 +12,21 @@
 
 #include "Zombie.hpp"
 
-Zombie* zombieHorde( int N, std::string name) {
+Zombie* zombieHorde(int N, std::string name) {
+    if (N <= 0) {
+        std::cerr << "ERRoR: A hord is composed of at least 1 zombie.\n";
+        return (NULL);
+    }
 
-	if (N <= 0) {
-		std::cerr << "ERRoR: A hord is composed of at least 1 zombie.\n";
-		return (NULL);
-	}
-
-	Zombie* horde = new Zombie[N];
-	for (int i = 0; i < N; i++) {
-		horde[i].baptize(name);
-	}
-	return (horde);
+    Zombie* horde = new Zombie[N];
+    for (int i = 0; i < N; i++) {
+        horde[i].baptize(name);
+    }
+    return (horde);
 }
 
-void	hordeAnnounce( int N, Zombie *horde) {
-	for (int i = 0; i < N; i++) {
-		horde[i].announce();
-	}
+void hordeAnnounce(int N, Zombie* horde) {
+    for (int i = 0; i < N; i++) {
+        horde[i].announce();
+    }
 }

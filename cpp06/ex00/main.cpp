@@ -10,25 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "ScalarConverter.hpp"
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cout << MAGENTA << "Please enter one (and only one) argument to convert." << RESET
+                  << std::endl;
+        return (1);
+    }
+    // (void)argv;
+    try {
+        ScalarConverter::convert(argv[1]);
+        // ScalarConverter::convert("");
+    } catch (const std::exception& e) {
+        std::cout << BLUE << e.what() << RESET << std::endl;
+    }
 
-	if (argc != 2) {
-		std::cout << MAGENTA << "Please enter one (and only one) argument to convert."
-		<< RESET << std::endl;
-		return (1);
-	}
-// (void)argv;
-	try {
-		ScalarConverter::convert(argv[1]);
-		// ScalarConverter::convert("");
-	}
-	catch (const std::exception& e) {
-		std::cout << BLUE << e.what() << RESET << std::endl;
-	}
-
-	return (0);
+    return (0);
 }

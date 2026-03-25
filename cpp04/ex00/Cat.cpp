@@ -10,44 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "Cat.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
-Cat::Cat() : Animal("Cat") {
-	std::cout << "Cat: Default constructor called" << std::endl;
-}
+Cat::Cat() : Animal("Cat") { std::cout << "Cat: Default constructor called" << std::endl; }
 
 Cat::Cat(std::string type) : Animal(type) {
-	std::cout << "Cat: Parameterized constructor called on " << type << std::endl;
+    std::cout << "Cat: Parameterized constructor called on " << type << std::endl;
 }
 
 Cat::Cat(const Cat& other) : Animal(other) {
-	std::cout << "Cat: Copy constructor called" << std::endl;
-
+    std::cout << "Cat: Copy constructor called" << std::endl;
 }
 
 Cat& Cat::operator=(const Cat& other) {
-	if (this != &other)
-		Animal::operator=(other); // Call base class assignment operator
-	//This ensures that if the base class ever has more members or logic, they are properly copied.
-	std::cout << "Cat: Copy assignment operator called" << std::endl;
-	return (*this);
+    if (this != &other) Animal::operator=(other);  // Call base class assignment operator
+    // This ensures that if the base class ever has more members or logic, they are properly copied.
+    std::cout << "Cat: Copy assignment operator called" << std::endl;
+    return (*this);
 }
 
-Cat::~Cat() {
-	std::cout << "Cat: Destructor called on " << type << std::endl;
-}
+Cat::~Cat() { std::cout << "Cat: Destructor called on " << type << std::endl; }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
 void Cat::makeSound() const {
-	std::cout <<  type << " says HHHIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSS" << std::endl;
+    std::cout << type << " says HHHIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSS" << std::endl;
 }

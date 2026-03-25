@@ -12,54 +12,48 @@
 
 #include "Cat.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
 Cat::Cat() : AAnimal("Cat") {
-	brain = new Brain();
-	std::cout << "Cat: Default constructor called" << std::endl;
+    brain = new Brain();
+    std::cout << "Cat: Default constructor called" << std::endl;
 }
 
 Cat::Cat(std::string type) : AAnimal(type) {
-	brain = new Brain();
-	std::cout << "Cat: Parameterized constructor called on " << type << std::endl;
+    brain = new Brain();
+    std::cout << "Cat: Parameterized constructor called on " << type << std::endl;
 }
 
 Cat::Cat(const Cat& other) : AAnimal(other) {
-	brain = new Brain(*other.brain); // Deep copy
-	std::cout << "Cat: Copy constructor called" << std::endl;
-
+    brain = new Brain(*other.brain);  // Deep copy
+    std::cout << "Cat: Copy constructor called" << std::endl;
 }
 
 Cat& Cat::operator=(const Cat& other) {
-	if (this != &other) {
-		*brain = *other.brain;	// Deep copy
-		AAnimal::operator=(other); // Call base class assignment operator
-	// This ensures that if the base class ever has more members or logic, they are properly copied.
-	}
-	std::cout << "Cat: Copy assignment operator called" << std::endl;
-	return (*this);
+    if (this != &other) {
+        *brain = *other.brain;      // Deep copy
+        AAnimal::operator=(other);  // Call base class assignment operator
+        // This ensures that if the base class ever has more members or logic, they are properly
+        // copied.
+    }
+    std::cout << "Cat: Copy assignment operator called" << std::endl;
+    return (*this);
 }
 
 Cat::~Cat() {
-	delete brain;
-	std::cout << "Cat: Destructor called on " << type << ", Brain deleted" << std::endl;
+    delete brain;
+    std::cout << "Cat: Destructor called on " << type << ", Brain deleted" << std::endl;
 }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
 void Cat::makeSound() const {
-	std::cout <<  type << " says HHHIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSS" << std::endl;
+    std::cout << type << " says HHHIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSS" << std::endl;
 }
 
-
-void Cat::setIdea(int i, const std::string& idea) {
-	brain->setIdea(i, idea);
-}
-std::string Cat::getIdea(int i) const {
-	return brain->getIdea(i);
-}
+void Cat::setIdea(int i, const std::string& idea) { brain->setIdea(i, idea); }
+std::string Cat::getIdea(int i) const { return brain->getIdea(i); }

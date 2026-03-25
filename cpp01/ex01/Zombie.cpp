@@ -12,21 +12,12 @@
 
 #include "Zombie.hpp"
 
-Zombie::Zombie() : name("temp") {};
+Zombie::Zombie() : name("temp"){};
 
-Zombie::Zombie(std::string input) : name(input) {
-	std::cout << name <<  ": enters\n";
-}
+Zombie::Zombie(std::string input) : name(input) { std::cout << name << ": enters\n"; }
 
-Zombie::~Zombie() {
-	std::cout << name <<  ": exits\n";
-}
+Zombie::~Zombie() { std::cout << name << ": exits\n"; }
 
-void Zombie::announce(void) {
-	std::cout << name << ": BraiiiiiiinnnzzzZ...\n";
-}
+void Zombie::announce(void) { std::cout << name << ": BraiiiiiiinnnzzzZ...\n"; }
 
-void Zombie::baptize(std::string newName) {
-	name = newName;
-}
-
+void Zombie::baptize(std::string newName) { name = newName; }

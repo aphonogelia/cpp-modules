@@ -10,44 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "Dog.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
-Dog::Dog() : Animal("Dog") {
-	std::cout << "Dog: Default constructor called" << std::endl;
-}
+Dog::Dog() : Animal("Dog") { std::cout << "Dog: Default constructor called" << std::endl; }
 
 Dog::Dog(std::string type) : Animal(type) {
-	std::cout << "Dog: Parameterized constructor called on " << type << std::endl;
+    std::cout << "Dog: Parameterized constructor called on " << type << std::endl;
 }
 
 Dog::Dog(const Dog& other) : Animal(other) {
-	std::cout << "Dog: Copy constructor called" << std::endl;
-
+    std::cout << "Dog: Copy constructor called" << std::endl;
 }
 
 Dog& Dog::operator=(const Dog& other) {
-	if (this != &other)
-		Animal::operator=(other); // Call base class assignment operator
-	//This ensures that if the base class ever has more members or logic, they are properly copied.
-	std::cout << "Dog: Copy assignment operator called" << std::endl;
-	return (*this);
+    if (this != &other) Animal::operator=(other);  // Call base class assignment operator
+    // This ensures that if the base class ever has more members or logic, they are properly copied.
+    std::cout << "Dog: Copy assignment operator called" << std::endl;
+    return (*this);
 }
 
-Dog::~Dog() {
-	std::cout << "Dog: Destructor called on " << type << std::endl;
-}
+Dog::~Dog() { std::cout << "Dog: Destructor called on " << type << std::endl; }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
-void Dog::makeSound() const {
-	std::cout << type << " says WOUAFF" << std::endl;
-}
+void Dog::makeSound() const { std::cout << type << " says WOUAFF" << std::endl; }

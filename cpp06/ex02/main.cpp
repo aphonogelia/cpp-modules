@@ -13,26 +13,25 @@
 #include "functions.hpp"
 
 int main(void) {
+    Base *a = generate();
+    identify(a);
+    identify(*a);
+    delete a;
 
-	Base *a = generate();
-	identify(a); 
-	identify(*a);
-	delete a;
-	
-	std::cout << ">> test class A" << std::endl;
-	A r;
-	identify(&r);
-	identify(r);
+    std::cout << ">> test class A" << std::endl;
+    A r;
+    identify(&r);
+    identify(r);
 
-	std::cout << ">> test class B" << std::endl;
-	B s;
-	identify(&s);
-	identify(s);
+    std::cout << ">> test class B" << std::endl;
+    B s;
+    identify(&s);
+    identify(s);
 
-	std::cout << ">> test class C" << std::endl;
-	C t;
-	identify(&t);
-	identify(t);
+    std::cout << ">> test class C" << std::endl;
+    C t;
+    identify(&t);
+    identify(t);
 
-	return (0);
+    return (0);
 }

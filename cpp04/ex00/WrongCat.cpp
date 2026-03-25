@@ -10,43 +10,37 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "WrongCat.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
 WrongCat::WrongCat() : WrongAnimal("WrongAnimal") {
-	std::cout << "WrongCat: Default constructor called" << std::endl;
+    std::cout << "WrongCat: Default constructor called" << std::endl;
 }
 
 WrongCat::WrongCat(std::string type) : WrongAnimal(type) {
-	std::cout << "WrongCat: Parameterized constructor called on " << type << std::endl;
+    std::cout << "WrongCat: Parameterized constructor called on " << type << std::endl;
 }
 
 WrongCat::WrongCat(const WrongCat& other) : WrongAnimal(other) {
-	std::cout << "WrongCat: Copy constructor called" << std::endl;
-
+    std::cout << "WrongCat: Copy constructor called" << std::endl;
 }
 
 WrongCat& WrongCat::operator=(const WrongCat& other) {
-	if (this != &other)
-		WrongAnimal::operator=(other); // Call base class assignment operator
-	//This ensures that if the base class ever has more members or logic, they are properly copied.
-	std::cout << "WrongCat: Copy assignment operator called" << std::endl;
-	return (*this);
+    if (this != &other) WrongAnimal::operator=(other);  // Call base class assignment operator
+    // This ensures that if the base class ever has more members or logic, they are properly copied.
+    std::cout << "WrongCat: Copy assignment operator called" << std::endl;
+    return (*this);
 }
 
-WrongCat::~WrongCat() {
-	std::cout << "WrongCat: Destructor called on " << type << std::endl;
-}
+WrongCat::~WrongCat() { std::cout << "WrongCat: Destructor called on " << type << std::endl; }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
 void WrongCat::makeSound() const {
-	std::cout << type << " says HHHIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSS" << std::endl;
+    std::cout << type << " says HHHIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSS" << std::endl;
 }

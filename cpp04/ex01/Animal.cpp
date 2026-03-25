@@ -10,46 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "Animal.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
 Animal::Animal() : type("Animal") {
-	std::cout << "Animal: Default constructor called" << std::endl;
+    std::cout << "Animal: Default constructor called" << std::endl;
 }
 
 Animal::Animal(std::string type) : type(type) {
-	std::cout << "Animal: Parameterized constructor called on " << type << std::endl;
+    std::cout << "Animal: Parameterized constructor called on " << type << std::endl;
 }
 
 Animal::Animal(const Animal& other) : type(other.type) {
-	std::cout << "Animal: Copy constructor called." << std::endl;
-
+    std::cout << "Animal: Copy constructor called." << std::endl;
 }
 
 Animal& Animal::operator=(const Animal& other) {
-	if (this != &other)
-		this->type = other.type;
-	std::cout << "Animal: Copy assignment operator called." << std::endl;
-	return (*this);
+    if (this != &other) this->type = other.type;
+    std::cout << "Animal: Copy assignment operator called." << std::endl;
+    return (*this);
 }
 
-Animal::~Animal() {
-	std::cout << "Animal: Destructor called on " << type << std::endl;
-}
+Animal::~Animal() { std::cout << "Animal: Destructor called on " << type << std::endl; }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
 void Animal::makeSound() const {
-	std::cout << type << " says CHEEP   CHEEP CHEEP     CHEEP" << std::endl;
+    std::cout << type << " says CHEEP   CHEEP CHEEP     CHEEP" << std::endl;
 }
 
-std::string Animal::getType() const {
-	return (this->type);
-}
+std::string Animal::getType() const { return (this->type); }

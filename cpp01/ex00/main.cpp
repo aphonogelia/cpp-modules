@@ -13,26 +13,25 @@
 #include "Zombie.hpp"
 
 int main() {
-	
-	// Stack allocated zombie
-	std::cout << "Stack alloc zombie:" << std::endl;
-	randomChump("Pierre");
-	randomChump("Paul");
-	randomChump("Jacques");
-	std::cout << std::endl;
+    // Stack allocated zombie
+    std::cout << "Stack alloc zombie:" << std::endl;
+    randomChump("Pierre");
+    randomChump("Paul");
+    randomChump("Jacques");
+    std::cout << std::endl;
 
-	// Heap allocated zombie
-	std::cout << "Heap alloc zombie:" << std::endl;
-	Zombie* zombie1 = newZombie("Helene");
-	Zombie* zombie2 = newZombie("Hannah");
-	Zombie* zombie3 = newZombie("Hillary");
-	zombie1->announce();
-	zombie2->announce();
-	zombie3->announce();
-	delete zombie1;
-	delete zombie2;
-	delete zombie3;
-	std::cout << std::endl;
+    // Heap allocated zombie
+    std::cout << "Heap alloc zombie:" << std::endl;
+    Zombie* zombie1 = newZombie("Helene");
+    Zombie* zombie2 = newZombie("Hannah");
+    Zombie* zombie3 = newZombie("Hillary");
+    zombie1->announce();
+    zombie2->announce();
+    zombie3->announce();
+    delete zombie1;
+    delete zombie2;
+    delete zombie3;
+    std::cout << std::endl;
 
-	return (0);
+    return (0);
 }

@@ -10,56 +10,48 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "Dog.hpp"
 
-  /////////////////////////////
- // 	CONDESTRUCTORS		//
+/////////////////////////////
+// 	CONDESTRUCTORS		//
 /////////////////////////////
 
 Dog::Dog() : Animal("Dog") {
-	brain = new Brain();
-	std::cout << "Dog: Default constructor called" << std::endl;
+    brain = new Brain();
+    std::cout << "Dog: Default constructor called" << std::endl;
 }
 
 Dog::Dog(std::string type) : Animal(type) {
-	brain = new Brain();
-	std::cout << "Dog: Parameterized constructor called on " << type << std::endl;
+    brain = new Brain();
+    std::cout << "Dog: Parameterized constructor called on " << type << std::endl;
 }
 
 Dog::Dog(const Dog& other) : Animal(other) {
-	brain = new Brain(*other.brain);
-	std::cout << "Dog: Copy constructor called" << std::endl;
+    brain = new Brain(*other.brain);
+    std::cout << "Dog: Copy constructor called" << std::endl;
 }
 
 Dog& Dog::operator=(const Dog& other) {
-	if (this != &other) {
-		*brain = *other.brain;	// Deep copy
-		Animal::operator=(other); // Call base class assignment operator
-	//This ensures that if the base class ever has more members or logic, they are properly copied.
-	}
-	std::cout << "Dog: Copy assignment operator called" << std::endl;
-	return (*this);
+    if (this != &other) {
+        *brain = *other.brain;     // Deep copy
+        Animal::operator=(other);  // Call base class assignment operator
+        // This ensures that if the base class ever has more members or logic, they are properly
+        // copied.
+    }
+    std::cout << "Dog: Copy assignment operator called" << std::endl;
+    return (*this);
 }
 
 Dog::~Dog() {
-	delete brain;
-	std::cout << "Dog: Destructor called on " << type << ", Brain deleted" << std::endl;
+    delete brain;
+    std::cout << "Dog: Destructor called on " << type << ", Brain deleted" << std::endl;
 }
 
-
-  /////////////////////////////
- // 	  FUNCTIONS			//
+/////////////////////////////
+// 	  FUNCTIONS			//
 /////////////////////////////
 
-void Dog::makeSound() const {
-	std::cout << type << " says WOUAFF" << std::endl;
-}
+void Dog::makeSound() const { std::cout << type << " says WOUAFF" << std::endl; }
 
-void Dog::setIdea(int i, const std::string& idea) {
-	brain->setIdea(i, idea);
-}
-std::string Dog::getIdea(int i) const {
-	return brain->getIdea(i);
-}
+void Dog::setIdea(int i, const std::string& idea) { brain->setIdea(i, idea); }
+std::string Dog::getIdea(int i) const { return brain->getIdea(i); }

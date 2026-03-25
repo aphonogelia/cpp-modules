@@ -23,72 +23,63 @@
 #define RESET "\033[0m"
 
 void coplien() {
-
-	std::cout << MAGENTA << "\n<<< Testing the coplien form >>>" << RESET << std::endl; 
-	try {
-		Bureaucrat Andre; // default
-		std::cout << Andre << std::endl;
-		Bureaucrat Anna("anna", 142); // parameterized
-		std::cout << Anna << std::endl;
-		Bureaucrat Alicia(Anna); // copy
-		std::cout << Alicia << std::endl;
-		Andre = Alicia; // assignment 
-		std::cout << Andre << std::endl;
-		Bureaucrat OutOfBound("OutOfBound", -5); // parameterized
-		std::cout << OutOfBound << std::endl;
-	}
-	catch (const std::exception& e){
-			std::cout << YELLOW << e.what() << RESET << std::endl;
-	}	
-	try {
-		Bureaucrat OutOfBound("OutOfBound", 151); // parameterized
-		std::cout << OutOfBound << std::endl;
-	}
-	catch (const std::exception& e){
-			std::cout << YELLOW << e.what() << RESET << std::endl;
-	}	
+    std::cout << MAGENTA << "\n<<< Testing the coplien form >>>" << RESET << std::endl;
+    try {
+        Bureaucrat Andre;  // default
+        std::cout << Andre << std::endl;
+        Bureaucrat Anna("anna", 142);  // parameterized
+        std::cout << Anna << std::endl;
+        Bureaucrat Alicia(Anna);  // copy
+        std::cout << Alicia << std::endl;
+        Andre = Alicia;  // assignment
+        std::cout << Andre << std::endl;
+        Bureaucrat OutOfBound("OutOfBound", -5);  // parameterized
+        std::cout << OutOfBound << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << YELLOW << e.what() << RESET << std::endl;
+    }
+    try {
+        Bureaucrat OutOfBound("OutOfBound", 151);  // parameterized
+        std::cout << OutOfBound << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << YELLOW << e.what() << RESET << std::endl;
+    }
 }
 
 void function() {
-
-	std::cout <<  MAGENTA <<"\n<<< Testing the functions >>>" << RESET<< std::endl; 
-	{
-		try {
-			Bureaucrat Andre; // default
-			Andre.decrementGrade();
-			std::cout << Andre << std::endl;
-		}
-		catch (const std::exception& e){
-			std::cout << YELLOW << e.what() << RESET << std::endl;
-		}
-		try {		
-			Bureaucrat Anna("anna", 142); // parameterized
-			for (int i = 0; i < 10; i++) {
-				Anna.decrementGrade();
-				std::cout << Anna << std::endl;
-			}
-		}
-		catch (const std::exception& e){
-			std::cout << YELLOW << e.what() << RESET << std::endl;
-		}
-		try {
-			Bureaucrat Anton("Anton", 6); // parameterized
-			for (int i = 0; i < 10; i++) {
-				Anton.incrementGrade();
-				std::cout << Anton << std::endl;
-			}
-		}
-		catch (const std::exception& e){
-			std::cout << YELLOW << e.what() << RESET << std::endl;
-		}	
-	}
+    std::cout << MAGENTA << "\n<<< Testing the functions >>>" << RESET << std::endl;
+    {
+        try {
+            Bureaucrat Andre;  // default
+            Andre.decrementGrade();
+            std::cout << Andre << std::endl;
+        } catch (const std::exception& e) {
+            std::cout << YELLOW << e.what() << RESET << std::endl;
+        }
+        try {
+            Bureaucrat Anna("anna", 142);  // parameterized
+            for (int i = 0; i < 10; i++) {
+                Anna.decrementGrade();
+                std::cout << Anna << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cout << YELLOW << e.what() << RESET << std::endl;
+        }
+        try {
+            Bureaucrat Anton("Anton", 6);  // parameterized
+            for (int i = 0; i < 10; i++) {
+                Anton.incrementGrade();
+                std::cout << Anton << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cout << YELLOW << e.what() << RESET << std::endl;
+        }
+    }
 }
 
-
 int main(void) {
+    coplien();
+    function();
 
-	coplien();
-	function();
-	
-	return (0);
+    return (0);
 }

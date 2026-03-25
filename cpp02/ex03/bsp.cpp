@@ -11,44 +11,38 @@
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
-#include "Point.hpp"
 #include "Line.hpp"
+#include "Point.hpp"
 
+bool bsp(Point const &a, Point const &b, Point const &c, Point const &point) {
+    std::cout << "Triangle A(" << a.getX() << ", " << a.getY() << "), B(" << b.getX() << ", "
+              << b.getY() << "), C(" << c.getX() << ", " << c.getY() << ")." << std::endl;
 
-bool bsp(Point const &a, Point const &b, Point const &c, Point const &point)
-{
+    std::cout << "Is the point (" << point.getX() << ", " << point.getY()
+              << ") inside the triangle?" << std::endl;
+    Line AB(a, b);
+    Line BC(b, c);
+    Line CA(c, a);
 
-	std::cout << "Triangle A(" << a.getX() << ", " << a.getY() 
-		<< "), B(" << b.getX() << ", " << b.getY() 
-		<< "), C(" << c.getX() << ", " << c.getY() << ")." << std::endl;
+    if (AB.coLineaire(c) == true) {
+        std::cout << "Fail: The point is not inside the triangle ABC. A, B and C are colineaires."
+                  << std::endl;
+        return (false);
+    } else if (AB.coLineaire(point) || BC.coLineaire(point) || CA.coLineaire(point)) {
+        std::cout << "Fail: The point is not inside the triangle ABC. The point is colineaire to "
+                     "one of the arret."
+                  << std::endl;
+        return (false);
+    }
 
-	std::cout << "Is the point (" << point.getX() << ", " << point.getY() << ") inside the triangle?" << std::endl;
-	Line AB(a, b);
-	Line BC(b, c);
-	Line CA(c, a);
+    else if (AB.aboveLeft(c) == AB.aboveLeft(point) && BC.aboveLeft(a) == BC.aboveLeft(point) &&
+             CA.aboveLeft(b) == CA.aboveLeft(point)) {
+        std::cout << "Success: The point is inside the triangle ABC." << std::endl;
+        return (true);
+    }
 
-	if (AB.coLineaire(c) == true)
-	{
-		std::cout << "Fail: The point is not inside the triangle ABC. A, B and C are colineaires." << std::endl;
-		return (false);
-	}
-	else if (AB.coLineaire(point) || BC.coLineaire(point) || CA.coLineaire(point))
-	{
-		std::cout << "Fail: The point is not inside the triangle ABC. The point is colineaire to one of the arret." << std::endl;
-		return (false);
-	}
-	
-	else if (AB.aboveLeft(c) == AB.aboveLeft(point)
-			&& BC.aboveLeft(a) == BC.aboveLeft(point)
-			&& CA.aboveLeft(b) == CA.aboveLeft(point))
-	{
-		std::cout << "Success: The point is inside the triangle ABC." << std::endl;
-		return (true);
-	}
-		
-	else
-	{
-		std::cout << "Fail: The point is not inside the triangle ABC." << std::endl;
-		return (false);	
-	}
+    else {
+        std::cout << "Fail: The point is not inside the triangle ABC." << std::endl;
+        return (false);
+    }
 }
