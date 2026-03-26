@@ -5,6 +5,7 @@
 This repository contains the 10 C++ modules from the 42 curriculum. The goal is to progressively learn C++ fundamentals (close to C++98 constraints) through practical exercises.
 Each module introduces key concepts, with increasing abstraction and complexity.
 
+
 ## Global Skills Acquired
 **OOP**: Encapsulation, inheritance, polymorphism, abstraction.
 **Memory Management**: Stack vs heap, avoiding leaks, RAII.
@@ -12,14 +13,17 @@ Each module introduces key concepts, with increasing abstraction and complexity.
 **Generic Programming**: Templates, reusability.
 **STL Mastery**: Containers, iterators, algorithms.
 
+
 ## Notes
 All projects follow C++98 standard (42 requirement).
 No external libraries.
 Focus on understanding fundamentals rather than modern shortcuts.
 Documented learning process and solved challenges with explanations.
 
+
 ## Links
 42 C++ Curriculum: https://42.fr/en/the-program/innovative-learning/
+
 
 ## Modules:
 
