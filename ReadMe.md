@@ -23,7 +23,7 @@ This repository contains the 10 C++ modules from the **42 school curriculum**. T
 
 ## 📂 Modules Breakdown
 
-### [CPP00 — Basics of C++](https://github.com/your-link-here)
+### [CPP00 — Basics of C++](https://github.com/aphonagelia/cpp-modules/cpp00)
 * **Concepts**: Namespaces (`std`), I/O streams, classes, member functions, `this` pointer, static members.
 * **Takeaway**: Transition from C to C++, object-oriented thinking.
 
