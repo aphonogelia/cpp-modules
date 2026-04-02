@@ -6,7 +6,7 @@
 /*   By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 15:05:10 by htharrau          #+#    #+#             */
-/*   Updated: 2026/04/02 13:39:30 by htharrau         ###   ########.fr       */
+/*   Updated: 2026/04/02 17:28:53 by htharrau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include <fstream>
+#include <ctime>
 
 class BitcoinExchange {
     
@@ -37,6 +38,10 @@ class BitcoinExchange {
         void loadInput(const std::string& filename);
 
         double getExchangeRate(const std::string& date) const;
+        void handleLine(const std::string& date, const double rate) const;
+        bool validDate(const std::string& date) const;
+
+
         void printMap(const std::map<std::string, double>& myMap) const; 
         void printMultimap(const std::multimap<std::string, double>& myMap) const;
 };
