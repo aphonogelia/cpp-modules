@@ -6,7 +6,7 @@
 /*   By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 15:05:10 by htharrau          #+#    #+#             */
-/*   Updated: 2026/04/02 13:22:35 by htharrau         ###   ########.fr       */
+/*   Updated: 2026/04/02 13:39:30 by htharrau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class BitcoinExchange {
     
     private:
         std::map<std::string, double> _data;
-        std::map<std::string, double> _input;
+        std::multimap<std::string, double> _input;
 
 
     public:
@@ -38,5 +38,5 @@ class BitcoinExchange {
 
         double getExchangeRate(const std::string& date) const;
         void printMap(const std::map<std::string, double>& myMap) const; 
-
+        void printMultimap(const std::multimap<std::string, double>& myMap) const;
 };
