@@ -6,7 +6,7 @@
 /*   By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 15:05:10 by htharrau          #+#    #+#             */
-/*   Updated: 2026/04/02 17:28:53 by htharrau         ###   ########.fr       */
+/*   Updated: 2026/04/03 14:58:10 by htharrau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,19 @@
 #include <ctime>
 
 class BitcoinExchange {
-    
-    private:
-        std::map<std::string, double> _data;
-        std::multimap<std::string, double> _input;
 
+private:
+    std::map<std::string, double> _data;
 
-    public:
-        BitcoinExchange();
+    bool loadDict();
+    void loadInput(const std::string& filename);
+    void handleLine(const std::string& date, const double rate) const;
+    bool validDate(const std::string& date, const bool& error) const;
+    double getExchangeRate(const std::string& date) const;
 
-        BitcoinExchange(const std::string& filename);
-        BitcoinExchange(const BitcoinExchange& other);
-        BitcoinExchange& operator=(const BitcoinExchange& other);
-        ~BitcoinExchange();
-
-        void loadDict();
-        void loadInput(const std::string& filename);
-
-        double getExchangeRate(const std::string& date) const;
-        void handleLine(const std::string& date, const double rate) const;
-        bool validDate(const std::string& date) const;
-
-
-        void printMap(const std::map<std::string, double>& myMap) const; 
-        void printMultimap(const std::multimap<std::string, double>& myMap) const;
+public:
+    BitcoinExchange(const std::string& filename);
+    BitcoinExchange(const BitcoinExchange& other);
+    BitcoinExchange& operator=(const BitcoinExchange& other);
+    ~BitcoinExchange();
 };
