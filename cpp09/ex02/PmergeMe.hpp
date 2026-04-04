@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
+/*   PmergeMe.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 15:05:10 by htharrau          #+#    #+#             */
-/*   Updated: 2026/04/03 15:10:47 by htharrau         ###   ########.fr       */
+/*   Updated: 2026/04/04 11:08:36 by htharrau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,29 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <vector>
+#include <deque>
+#include <set>
 
 class PmergeMe {
 
 private:
-    std::map<std::string, double> _data;
+    std::vector<int> _dataVect;
+    std::deque<int> _dataDeq;
+    std::vector<int> _sortedVect;
+    size_t _nComp;
+    size_t _n;
+    std::vector<int> _expJacob;
 
-    bool loadDict();
-    void loadInput(const std::string& filename);
-    void handleLine(const std::string& date, const double rate) const;
-    bool validDate(const std::string& date, const bool& error) const;
-    double getExchangeRate(const std::string& date) const;
+    std::vector<int> sortAlgoV(std::vector<int> a);
+    std::vector<int> calcJacobsthal() const;
+    void printPairs(const std::vector<std::pair<int, int> >& pairs) const;
+    void printVect(const std::vector<int>& vec, const std::string& label);
+    void binaryInsert(std::vector<int>& sorted, size_t upperBound, int loser);
+
 
 public:
-    PmergeMe(const std::string& filename);
+    PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD);
     PmergeMe(const PmergeMe& other);
     PmergeMe& operator=(const PmergeMe& other);
     ~PmergeMe();

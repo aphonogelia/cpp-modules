@@ -12,9 +12,21 @@
 
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe(const std::string& filename) {
-    if (loadDict()) loadInput(filename);
+
+PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD) : _dataVect(dataV), _dataDeq(dataD) {
+
+    _n = _dataVect.size();
+    std::vector<int> toSlice = _dataVect;
+    _expJacob = calcJacobsthal();
+    printVect(_expJacob, "Exp Jacohstahl");
+    _nComp = 0;
+
+    printVect(_dataVect, "Before");
+    _sortedVect = sortAlgoV(toSlice);
+    printVect(_sortedVect, "Sorted");
+
 }
+
 
 PmergeMe::PmergeMe(const PmergeMe& other) {
     *this = other;
@@ -22,149 +34,180 @@ PmergeMe::PmergeMe(const PmergeMe& other) {
 
 PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
     if (this != &other) {
-        _data = other._data;
+        _dataVect = other._dataVect;
+        _dataDeq = other._dataDeq;
+        _sortedVect = other._sortedVect;
     }
     return *this;
 }
 
-PmergeMe::~PmergeMe() {
+PmergeMe::~PmergeMe() {}
+
+
+
+std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
+
+    // 0 or 1 element, already sorted
+    if (toSlice.size() < 2)
+        return toSlice;
+
+
+    ///////////////////////// SLICING DOWN ////////////////////////
+
+    // checking for orphans (vector size odd)
+    int orphan = -1;
+    if (toSlice.size() % 2 != 0) {
+        orphan = toSlice.back();
+        toSlice.pop_back();
+    }
+
+    // storing the pairs (bigger, smaller)
+    std::vector<std::pair<int, int> > pairs;
+    for (size_t i = 0; i < toSlice.size(); i += 2) {
+        if (toSlice[i] > toSlice[i + 1])
+            pairs.push_back(std::make_pair(toSlice[i], toSlice[i + 1]));
+        else
+            pairs.push_back(std::make_pair(toSlice[i + 1], toSlice[i]));
+
+    }
+    // comparisons increment for the pairs
+    _nComp += toSlice.size() / 2;
+
+    // vector of the winners of the round
+    std::vector<int> toSliceNext;
+    for (size_t i = 0; i < pairs.size(); i++)
+        toSliceNext.push_back(pairs[i].first);
+
+    // debug print
+    printVect(toSliceNext, "Current winners");
+    std::cout << "ncomp = " << _nComp << std::endl;
+
+    // recursive call on the winners
+    toSliceNext = sortAlgoV(toSliceNext);
+
+
+
+    ///////////////////////// INSERTING UP ////////////////////////
+
+
+    // debug print
+    printPairs(pairs);
+
+
+    // implement insertion with jacobstahl
+
+    // top in one vector, bottom in another
+    std::vector<int> orderedUpper = toSliceNext; // for indexes
+    std::vector<int> unorderedLower;
+    for (size_t i = 0; i < orderedUpper.size(); i++) {
+        for (size_t j = 0; j < pairs.size(); j++) {
+            if (pairs[j].first == orderedUpper[i]) {
+                unorderedLower.push_back(pairs[orderedUpper[i]].second);
+            }
+        }
+    }
+    printVect(orderedUpper, "orderedUpper");
+    printVect(unorderedLower, "unorderedLower");
+
+    // to insert : unorderedLower[i] in toSliceNext with upperBound = _expJacob[toSliceNext[i]]
+    for (size_t i = 0; i < orderedUpper.size(); i++) {
+       int toInsert =  unorderedLower[_expJacob[i]]; 
+       std::cout << "toInsert: " << toInsert << ", upperBound: " << _expJacob[i] << std::endl;
+    }
+
+    for (size_t i = 0; i < toSliceNext.size(); i++) {
+        binaryInsert(toSliceNext, _expJacob[toSliceNext[i]], unorderedLower[i]);
+    }
+
+    // if orphan: back in (after the pairs of the round) upperbound: last element
+    std::cout << "putting back orphan = " << orphan << std::endl;
+    if (orphan != -1)
+        binaryInsert(toSliceNext, toSliceNext.size() - 1, orphan);
+
+    // returning the sorted vector!!
+    return(toSliceNext);
+
 }
 
+void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, int toInsert) {
+    size_t left = 0;
+    size_t right = upperBoundIndex;
 
+    std::cout << "\n--- binaryInsert ---" << std::endl;
+    std::cout << "toInsert: " << toInsert << ", upperBound: " << upperBoundIndex << std::endl;
+    std::cout << "searching in: ";
+    for (size_t i = 0; i <= upperBoundIndex && i < sorted.size(); i++)
+        std::cout << sorted[i] << " ";
+    std::cout << std::endl;
 
-bool PmergeMe::loadDict() {
-
-    std::ifstream file("data.csv");
-    if (!file.is_open()) {
-        std::cerr << "[Error] [data.csv] Could not open file: data.csv" << std::endl;
-        return false;
-    }
-
-    std::string line;
-    std::getline(file, line); // skip header
-    size_t lineNb = 2;
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::string date, rateString;
-        double rate;
-        if (!(std::getline(iss, date, ',') && std::getline(iss, rateString))) {
-            std::cerr << "[Error] [data.csv] Invalid line format " << lineNb << ": " << line << std::endl;
-            return false;
-        }
-        std::istringstream converter(rateString);
-        if (!(converter >> rate) || rate < 0) {
-            std::cerr << "[Error] [data.csv] Invalid rate in line " << lineNb << ": " << line << std::endl;
-            return false;
-        }
-        else if (!validDate(date, false)) {
-            std::cout << "[Error] [data.csv] Invalid date in line " << lineNb << ": " << line << std::endl;
-            return false;
-        }
-        _data[date] = rate;
-        lineNb++;
-    }
-    file.close();
-    return true;
-}
-
-
-void PmergeMe::loadInput(const std::string& inputFile) {
-    std::ifstream file(inputFile.c_str());
-    if (!file.is_open()) {
-        std::cerr << "[Error] [input.txt] Could not open file: " << inputFile << std::endl;
-        return;
-    }
-
-    std::string line;
-    std::getline(file, line); // skip header
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::string date;
-        char pipe;
-        double rate;
-
-        if (iss >> date >> pipe >> rate && (pipe == '|')) {
-            handleLine(date, rate);
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
+        std::cout << "left=" << sorted[left] << " right=" << sorted[right] << " mid=" << sorted[mid] << std::endl;
+        _nComp++;
+        if (toInsert < sorted[mid]) {
+            std::cout << toInsert << " < " << sorted[mid] << " -> go left" << std::endl;
+            right = mid;
         }
         else {
-            std::cerr << "Error: bad input (" << line << ")" << std::endl;
+            std::cout << toInsert << " >= " << sorted[mid] << " -> go right" << std::endl;
+            left = mid + 1;
         }
     }
-    file.close();
-}
+    std::cout << "inserting " << toInsert << " at position " << left << std::endl;
+    sorted.insert(sorted.begin() + left, toInsert);
 
-void PmergeMe::handleLine(const std::string& date, const double rate) const {
-    if (rate < 0) {
-        std::cerr << "Error: not a positive number (" << rate << ")" << std::endl;
-        return;
-    }
-    else if (rate > 1000) {
-        std::cout << "Error: too large a number (" << rate << ")" << std::endl;
-        return;
-    }
-    else if (!validDate(date, true)) {
-        return;
-    }
-    std::cout << date << " | " << rate << " => " << rate * getExchangeRate(date) << std::endl;
+    std::cout << "sorted after insert: ";
+    for (size_t i = 0; i < sorted.size(); i++)
+        std::cout << sorted[i] << " ";
+    std::cout << "\n--- end binaryInsert ---\n" << std::endl;
 }
 
 
-bool PmergeMe::validDate(const std::string& date, const bool &error) const {
-    if (date.length() != 10 || date[4] != '-' || date[7] != '-') {
-        std::cout << "Error: invalid date (" << date << ")" << std::endl;
-        return false;
+
+// jacobstahl sequence expanded till _n / 2 
+std::vector<int> PmergeMe::calcJacobsthal() const {
+
+    std::cout << "Calculating Jacobsthal numbers up to " << _n / 2 << std::endl;
+    const size_t maxInsert = _n / 2;
+
+    std::vector<int> jacob;
+    jacob.push_back(1);
+    jacob.push_back(3);
+    while (jacob.back() < (int)maxInsert) {
+        size_t i = jacob.size();
+        jacob.push_back(jacob[i - 1] + 2 * jacob[i - 2]);
     }
 
-    std::istringstream y(date.substr(0, 4));
-    std::istringstream m(date.substr(5, 2));
-    std::istringstream d(date.substr(8, 2));
+    // jacobstahl expanded + removing 1 to have indexes ready to use
+    std::vector<int> expanded;
 
-    int year, month, day;
-    if (!(y >> year) || !(m >> month) || !(d >> day)) {
-        if (error) std::cout << "Error: invalid date (" << date << ")" << std::endl;
-        return false;
+    std::cout << "jacob.size() " << jacob.size() << std::endl;
+    expanded.push_back(jacob[0] - 1);
+    for (size_t i = 1; i < jacob.size(); i++) {
+        for (int j = jacob[i]; j > jacob[i - 1]; j--) {
+            expanded.push_back(j - 1);
+            if (j == 1) break;
+        }
+        if (jacob[i] >= (int)maxInsert) break;
     }
-
-    if (month < 1 || month > 12 || day < 1) {
-        if (error) std::cout << "Error: invalid date (" << date << ")" << std::endl;
-        return false;
-    }
-
-    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
-        daysInMonth[1] = 29;
-    if (day > daysInMonth[month - 1]) {
-        if (error) std::cout << "Error: invalid date (" << date << ")" << std::endl;
-        return false;
-    }
-
-    // reject dates before first entry in data
-    if (!_data.empty() && date < _data.begin()->first) {
-        if (error) std::cout << "Error: no rate for this date (" << date << ")" << std::endl;
-        return false;
-    }
-
-    // reject dates that are in the future
-    time_t now = time(0);
-    struct tm* today = localtime(&now);
-    char buf[11];
-    strftime(buf, sizeof(buf), "%Y-%m-%d", today);
-    if (date > std::string(buf)) {
-        std::cout << "Error: date is in the future (" << date << ")" << std::endl;
-        return false;
-    }
-
-    return true;
+    return expanded;
 }
 
 
-// map alwayz sorted in ascending key order
-double PmergeMe::getExchangeRate(const std::string& date) const {
-    std::map<std::string, double>::const_iterator it = _data.lower_bound(date);
+// print function for vector with a label
+void PmergeMe::printVect(const std::vector<int>& vec, const std::string& label) {
+    std::cout << label << ": ";
+    for (std::vector<int>::const_iterator it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
 
-    if (it != _data.end() && it->first == date)
-        return it->second;
 
-    --it;
-    return it->second;
+// debug function to print the pairs of the round
+void PmergeMe::printPairs(const std::vector<std::pair<int, int> >& pairs) const {
+    for (size_t i = 0; i < pairs.size(); i++) {
+        std::cout << "(" << pairs[i].first << ", " << pairs[i].second << ") ";
+    }
+    std::cout << std::endl;
 }
