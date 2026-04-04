@@ -17,6 +17,7 @@
 
 PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD) : _dataVect(dataV), _dataDeq(dataD) {
 
+    struct timeval start, end;
     _n = _dataVect.size();
     _nComp = 0;
     std::vector<int> toSlice = _dataVect;
@@ -27,15 +28,10 @@ PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD) 
 
 
     printVect(_dataVect, "Before");
-    _sortedVect = sortAlgoV(toSlice);
-    // _sortedDeq = sortAlgoD(toSlice);
-    printVect(_sortedVect, "Sorted");
-
-
-    struct timeval start, end;
     gettimeofday(&start, NULL);
     _sortedVect = sortAlgoV(toSlice);
     gettimeofday(&end, NULL);
+    printVect(_sortedVect, "Sorted");
 
     double vectTime = (end.tv_sec - start.tv_sec) * 1000000.0
         + (end.tv_usec - start.tv_usec);
@@ -43,7 +39,7 @@ PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD) 
     std::cout << "Time to process a range of " << _n
         << " elements with std::vector : " << vectTime << " us" << std::endl;
 
-       std::cout << "Number of comparisons " << _nComp  << std::endl;     
+    std::cout << "Number of comparisons " << _nComp << std::endl;
 
 }
 
@@ -116,10 +112,14 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
     // top in one vector, bottom in another
     std::vector<int> orderedUpper = toSliceNext;
     std::vector<int> unorderedLower;
+    std::vector<bool> used(pairs.size(), false);
+
     for (size_t i = 0; i < orderedUpper.size(); i++) {
         for (size_t j = 0; j < pairs.size(); j++) {
-            if (pairs[j].first == orderedUpper[i]) {
+        if (!used[j] && pairs[j].first == orderedUpper[i]) {
                 unorderedLower.push_back(pairs[j].second);
+                used[j] = true;
+                break;
             }
         }
     }
