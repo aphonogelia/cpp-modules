@@ -6,11 +6,11 @@
 #    By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/20 12:40:32 by htharrau          #+#    #+#              #
-#    Updated: 2026/04/03 15:10:31 by htharrau         ###   ########.fr        #
+#    Updated: 2026/04/04 14:03:31 by htharrau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = btc
+NAME = PMergeMe
 
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -MMD -MP
