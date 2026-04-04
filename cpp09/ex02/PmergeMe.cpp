@@ -12,7 +12,8 @@
 
 #include "PmergeMe.hpp"
 
-#define DEBUG 1
+#define DEBUG 0
+
 
 
 PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD) : _dataVect(dataV), _dataDeq(dataD) {
@@ -40,7 +41,7 @@ PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD) 
         << " elements with std::vector : " << vectTime << " us" << std::endl;
 
     std::cout << "Number of comparisons " << _nComp << std::endl;
-
+    verif();
 }
 
 
@@ -96,7 +97,7 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
 
 #if DEBUG
     printVect(toSliceNext, "Current winners");
-    std::cout << "ncomp = " << _nComp << std::endl;
+    // std::cout << "ncomp = " << _nComp << std::endl;
 #endif
 
     // recursive call on the winners
@@ -116,48 +117,49 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
 
     for (size_t i = 0; i < orderedUpper.size(); i++) {
         for (size_t j = 0; j < pairs.size(); j++) {
-        if (!used[j] && pairs[j].first == orderedUpper[i]) {
+            if (!used[j] && pairs[j].first == orderedUpper[i]) {
                 unorderedLower.push_back(pairs[j].second);
                 used[j] = true;
                 break;
             }
+
         }
     }
+    if (orphan != -1) {
+        unorderedLower.push_back(orphan);
+        orderedUpper.push_back(-1);
+    }
+
 #if DEBUG
     printVect(orderedUpper, "orderedUpper");
     printVect(unorderedLower, "unorderedLower");
 #endif
 
+
     // insert unorderedLower elements in jacobsthal order
+    std::vector<bool> inserted(unorderedLower.size(), false);
     for (size_t k = 0; k < unorderedLower.size(); k++) {
         int jacIndex = _expJacob[k];
-        if (jacIndex >= (int)orderedUpper.size())
-            jacIndex = orderedUpper.size() - 1;
+        if (jacIndex >= (int)unorderedLower.size())
+            jacIndex = unorderedLower.size() - 1;
+        //    / skip already inserted indices
+        while (jacIndex >= 0 && inserted[jacIndex])
+            jacIndex--;
+        if (jacIndex < 0)
+            break;
+        inserted[jacIndex] = true;
         int upperbound = orderedUpper[jacIndex];
 
         // find upperbound's current position in toSliceNext (shifts after each insert)
-        size_t upperboundPos = 0;
-        for (size_t i = 0; i < toSliceNext.size(); i++) {
-            if (toSliceNext[i] == upperbound) {
-                upperboundPos = i;
-                break;
-            }
-        }
-#if DEBUG
-        std::cout << "upperbound = " << upperbound << ", toInsert = " << unorderedLower[jacIndex] << std::endl;
-#endif
+        size_t upperboundPos = toSliceNext.size();
+        if (upperbound != -1)
+            upperboundPos = std::lower_bound(toSliceNext.begin(), toSliceNext.end(), upperbound) - toSliceNext.begin();
+
         binaryInsert(toSliceNext, upperboundPos, unorderedLower[jacIndex]);
     }
-
-    // if orphan: insert at end with full size as upper bound
-#if DEBUG
-    std::cout << "putting back orphan = " << orphan << std::endl;
-#endif
-    if (orphan != -1)
-        binaryInsert(toSliceNext, toSliceNext.size(), orphan);
-
     return toSliceNext;
 }
+
 
 void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, int toInsert) {
     size_t left = 0;
@@ -206,16 +208,13 @@ void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, in
         }
         _nComp++;
     }
+    sorted.insert(sorted.begin() + left, toInsert);
 #if DEBUG
     std::cout << "inserting " << toInsert << " at position " << left << std::endl;
-#endif
-    sorted.insert(sorted.begin() + left, toInsert);
-
-#if DEBUG
     std::cout << "sorted after insert: ";
     for (size_t i = 0; i < sorted.size(); i++)
         std::cout << sorted[i] << " ";
-    std::cout << "_nComp: " << _nComp << std::endl;
+    // std::cout << "_nComp: " << _nComp << std::endl;
     std::cout << "\n--- end binaryInsert ---\n" << std::endl;
 #endif
 }
@@ -227,7 +226,7 @@ std::vector<int> PmergeMe::calcJacobsthal() const {
 #if DEBUG
     std::cout << "Calculating Jacobsthal numbers up to " << _n / 2 << std::endl;
 #endif
-    const size_t maxInsert = _n / 2;
+    const size_t maxInsert = _n / 2 + 1;
 
     std::vector<int> jacob;
     jacob.push_back(1);
@@ -266,4 +265,26 @@ void PmergeMe::printPairs(const std::vector<std::pair<int, int> >& pairs) const 
     for (size_t i = 0; i < pairs.size(); i++)
         std::cout << "(" << pairs[i].first << ", " << pairs[i].second << ") ";
     std::cout << std::endl;
+}
+
+bool PmergeMe::isSorted(const std::vector<int>& vec) const {
+    if (vec.size() < 2)
+        return true;
+    for (size_t i = 1; i < vec.size(); i++) {
+        if (vec[i - 1] > vec[i])
+            return false;
+    }
+    return true;
+}
+
+void PmergeMe::verif() {
+    if (_sortedVect.size() != _dataVect.size()) {
+        std::cerr << "Error: sorted vector size does not match original!" << std::endl;
+        exit(1);
+    }
+    if (!isSorted(_sortedVect)) {
+        std::cerr << "Error: vector is not sorted!" << std::endl;
+        exit(1);
+    }
+    std::cout << "sorted OK" << std::endl;
 }

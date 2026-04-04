@@ -6,7 +6,7 @@
 /*   By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 15:05:10 by htharrau          #+#    #+#             */
-/*   Updated: 2026/04/04 14:57:37 by htharrau         ###   ########.fr       */
+/*   Updated: 2026/04/04 16:11:40 by htharrau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ private:
     void printPairs(const std::vector<std::pair<int, int> >& pairs) const;
     void printVect(const std::vector<int>& vec, const std::string& label);
     void binaryInsert(std::vector<int>& sorted, size_t upperBound, int loser);
+    bool isSorted(const std::vector<int>& vec) const;
+    void verif();
 
 
 public:
