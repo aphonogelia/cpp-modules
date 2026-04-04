@@ -102,7 +102,7 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
     for (size_t i = 0; i < orderedUpper.size(); i++) {
         for (size_t j = 0; j < pairs.size(); j++) {
             if (pairs[j].first == orderedUpper[i]) {
-                unorderedLower.push_back(pairs[orderedUpper[i]].second);
+                unorderedLower.push_back(pairs[j].second);
             }
         }
     }
@@ -110,19 +110,30 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
     printVect(unorderedLower, "unorderedLower");
 
     // to insert : unorderedLower[i] in toSliceNext with upperBound = _expJacob[toSliceNext[i]]
-    for (size_t i = 0; i < orderedUpper.size(); i++) {
-       int toInsert =  unorderedLower[_expJacob[i]]; 
-       std::cout << "toInsert: " << toInsert << ", upperBound: " << _expJacob[i] << std::endl;
+    for (size_t k = 0; k < unorderedLower.size(); k++) {
+        int jacIndex = _expJacob[k];  // which lower element to insert 
+        if (jacIndex >= (int)orderedUpper.size())
+            jacIndex = orderedUpper.size() - 1; // if jacobstahl index exceeds, take the last one as upperbound
+        int upperbound = orderedUpper[jacIndex];  // its winner/upperbound value
+
+        // find upperbound's current position in toSliceNext (shifts after each insert)
+        size_t upperboundPos = 0;
+        for (size_t i = 0; i < toSliceNext.size(); i++) {
+            if (toSliceNext[i] == upperbound) {
+                upperboundPos = i;
+                break;
+            }
+        }
+        std::cout << "upperboundPos = " << upperbound <<  ", unorderedLower[jacIndex] = "<<  unorderedLower[jacIndex] << std::endl;
+        binaryInsert(toSliceNext, upperboundPos, unorderedLower[jacIndex]);
     }
 
-    for (size_t i = 0; i < toSliceNext.size(); i++) {
-        binaryInsert(toSliceNext, _expJacob[toSliceNext[i]], unorderedLower[i]);
-    }
+
 
     // if orphan: back in (after the pairs of the round) upperbound: last element
     std::cout << "putting back orphan = " << orphan << std::endl;
     if (orphan != -1)
-        binaryInsert(toSliceNext, toSliceNext.size() - 1, orphan);
+        binaryInsert(toSliceNext, toSliceNext.size(), orphan);
 
     // returning the sorted vector!!
     return(toSliceNext);
@@ -133,6 +144,12 @@ void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, in
     size_t left = 0;
     size_t right = upperBoundIndex;
 
+    if (upperBoundIndex == 0) {
+        std::cout << "inserting " << toInsert << " at position " << upperBoundIndex << std::endl;
+        sorted.insert(sorted.begin() + upperBoundIndex, toInsert);
+        return;
+    }
+
     std::cout << "\n--- binaryInsert ---" << std::endl;
     std::cout << "toInsert: " << toInsert << ", upperBound: " << upperBoundIndex << std::endl;
     std::cout << "searching in: ";
@@ -142,8 +159,7 @@ void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, in
 
     while (left < right) {
         size_t mid = left + (right - left) / 2;
-        std::cout << "left=" << sorted[left] << " right=" << sorted[right] << " mid=" << sorted[mid] << std::endl;
-        _nComp++;
+        std::cout << "left=" << sorted[left] << " right index=" << right << " mid=" << sorted[mid] << std::endl;
         if (toInsert < sorted[mid]) {
             std::cout << toInsert << " < " << sorted[mid] << " -> go left" << std::endl;
             right = mid;
@@ -152,6 +168,7 @@ void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, in
             std::cout << toInsert << " >= " << sorted[mid] << " -> go right" << std::endl;
             left = mid + 1;
         }
+        _nComp++;
     }
     std::cout << "inserting " << toInsert << " at position " << left << std::endl;
     sorted.insert(sorted.begin() + left, toInsert);
@@ -159,6 +176,7 @@ void PmergeMe::binaryInsert(std::vector<int>& sorted, size_t upperBoundIndex, in
     std::cout << "sorted after insert: ";
     for (size_t i = 0; i < sorted.size(); i++)
         std::cout << sorted[i] << " ";
+    std::cout << "_nComp: " << _nComp << std::endl;
     std::cout << "\n--- end binaryInsert ---\n" << std::endl;
 }
 

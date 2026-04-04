@@ -6,7 +6,7 @@
 /*   By: htharrau <htharrau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 15:05:10 by htharrau          #+#    #+#             */
-/*   Updated: 2026/04/04 11:08:36 by htharrau         ###   ########.fr       */
+/*   Updated: 2026/04/04 14:16:25 by htharrau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <ctime>
 #include <vector>
 #include <deque>
-#include <set>
+#include <algorithm>
 
 class PmergeMe {
 
