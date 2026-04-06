@@ -20,12 +20,12 @@ PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD)
     : _dataVect(dataV), _dataDeq(dataD) {
 
     struct timeval startV, endV, startD, endD;
-    _n      = _dataVect.size();
+    _n = _dataVect.size();
     _nCompV = 0;
     _nCompD = 0;
 
     _expJacob = calcJacobsthal();
-    // printVect(_expJacob, "Exp Jacobsthal");
+    printVect(_expJacob, "Exp Jacobsthal");
 
     std::vector<int> toSliceV = _dataVect;
     std::deque<int>  toSliceD = _dataDeq;
@@ -43,30 +43,30 @@ PmergeMe::PmergeMe(const std::vector<int>& dataV, const std::deque<int>& dataD)
     printVect(_sortedVect, "Sorted");
 
     double vectTime = (endV.tv_sec - startV.tv_sec) * 1000000.0
-                    + (endV.tv_usec - startV.tv_usec);
-    double deqTime  = (endD.tv_sec - startD.tv_sec) * 1000000.0
-                    + (endD.tv_usec - startD.tv_usec);
+        + (endV.tv_usec - startV.tv_usec);
+    double deqTime = (endD.tv_sec - startD.tv_sec) * 1000000.0
+        + (endD.tv_usec - startD.tv_usec);
 
     std::cout << "Time to process a range of " << _n
-              << " elements with std::vector : " << vectTime << " us" << std::endl;
+        << " elements with std::vector : " << vectTime << " us" << std::endl;
     std::cout << "Time to process a range of " << _n
-              << " elements with std::deque  : " << deqTime  << " us" << std::endl;
+        << " elements with std::deque  : " << deqTime << " us" << std::endl;
 
 
-    // std::cout << "Number of comparisons (vector): " << _nCompV << std::endl;
-    // std::cout << "Number of comparisons (deque) : " << _nCompD << std::endl;
-    // verif(_sortedVect, _dataVect);
-    // verif(_sortedDeq,  _dataDeq);
+    std::cout << "Number of comparisons (vector): " << _nCompV << std::endl;
+    std::cout << "Number of comparisons (deque) : " << _nCompD << std::endl;
+    verif(_sortedVect, _dataVect);
+    verif(_sortedDeq, _dataDeq);
 }
 
 PmergeMe::PmergeMe(const PmergeMe& other) { *this = other; }
 
 PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
     if (this != &other) {
-        _dataVect   = other._dataVect;
-        _dataDeq    = other._dataDeq;
+        _dataVect = other._dataVect;
+        _dataDeq = other._dataDeq;
         _sortedVect = other._sortedVect;
-        _sortedDeq  = other._sortedDeq;
+        _sortedDeq = other._sortedDeq;
     }
     return *this;
 }
@@ -79,7 +79,7 @@ PmergeMe::~PmergeMe() {}
 
 std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
 
-    // 0 or 1 element, already sorted
+    // 1 element, already sorted
     if (toSlice.size() < 2)
         return toSlice;
 
@@ -112,7 +112,7 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
     // ── Inserting up ─────────────────────────────────────────────────────────
 
     // top in one vector, bottom in another
-    std::vector<int>  orderedUpper   = toSliceNext;
+    std::vector<int>  orderedUpper = toSliceNext;
     std::vector<int>  unorderedLower;
     std::vector<bool> used(pairs.size(), false);
 
@@ -133,24 +133,33 @@ std::vector<int> PmergeMe::sortAlgoV(std::vector<int> toSlice) {
     // printVect(orderedUpper,    "orderedUpper");
     // printVect(unorderedLower,  "unorderedLower");
 
-    // insert unorderedLower elements in jacobsthal order
-    std::vector<bool> inserted(unorderedLower.size(), false);
-    for (size_t k = 0; k < unorderedLower.size(); k++) {
-        int jacIndex = _expJacob[k];
-        if (jacIndex >= (int)unorderedLower.size())
-            jacIndex = unorderedLower.size() - 1;
-        while (jacIndex >= 0 && inserted[jacIndex])
-            jacIndex--;
-        if (jacIndex < 0)
-            break;
-        inserted[jacIndex] = true;
+    // jacobSthal sequence limited to the length on unorderedLower
+    std::vector<int> currentExpJacob;
+    for (size_t k = 0; k < _expJacob.size(); k++) {
+        if (_expJacob[k] < (int)unorderedLower.size())
+            currentExpJacob.push_back(_expJacob[k]);
+    }
+    // printVect(currentExpJacob, "Exp Jacobsthal");
+    // printVect(toSliceNext, "toSliceNext before insertions");
+    // std::cout << "unorderedLower.size():" << unorderedLower.size() << std::endl;
 
-        int    upperbound    = orderedUpper[jacIndex];
-        size_t upperboundPos = toSliceNext.size();
-        if (upperbound != -1)
-            upperboundPos = std::lower_bound(toSliceNext.begin(), toSliceNext.end(), upperbound)
-                            - toSliceNext.begin();
-        // std::cout << "upperbound = " << upperbound << ", toInsert = " << unorderedLower[jacIndex] << std::endl;
+    // insert unorderedLower elements in jacobsthal order
+    for (size_t k = 0; k < currentExpJacob.size(); k++) {
+        int jacIndex = currentExpJacob[k];
+        int upperbound = orderedUpper[jacIndex];
+        size_t upperboundPos = 0;
+        // orphan: full chain search
+        if (upperbound == -1)
+            upperboundPos = toSliceNext.size();
+        // otherwise find the upperbound position
+        else
+            for (size_t i = 0; i < toSliceNext.size(); i++) {
+                if (toSliceNext[i] == upperbound) {
+                    upperboundPos = i;
+                    break;
+                }
+            }
+        // std::cout << "Inserting " << unorderedLower[jacIndex] << ", upperbound = " << upperbound << ", upperboundPos = " << upperboundPos << std::endl;
         binaryInsertV(toSliceNext, upperboundPos, unorderedLower[jacIndex]);
     }
     return toSliceNext;
@@ -194,7 +203,7 @@ std::deque<int> PmergeMe::sortAlgoD(std::deque<int> toSlice) {
     // ── Inserting up ─────────────────────────────────────────────────────────
 
     // top in one deque, bottom in another
-    std::deque<int>  orderedUpper   = toSliceNext;
+    std::deque<int>  orderedUpper = toSliceNext;
     std::deque<int>  unorderedLower;
     std::deque<bool> used(pairs.size(), false);
 
@@ -213,24 +222,34 @@ std::deque<int> PmergeMe::sortAlgoD(std::deque<int> toSlice) {
         orderedUpper.push_back(-1);
     }
 
+
+    // jacobSthal sequence limited to the length on unorderedLower
+    std::deque<int> currentExpJacob;
+    for (size_t k = 0; k < _expJacob.size(); k++) {
+        if (_expJacob[k] < (int)unorderedLower.size())
+            currentExpJacob.push_back(_expJacob[k]);
+    }
+    // printVect(currentExpJacob, "Exp Jacobsthal");
+    // printVect(toSliceNext, "toSliceNext before insertions");
+    // std::cout << "unorderedLower.size():" << unorderedLower.size() << std::endl;
+
     // insert unorderedLower elements in jacobsthal order
-    std::deque<bool> inserted(unorderedLower.size(), false);
-    for (size_t k = 0; k < unorderedLower.size(); k++) {
-        int jacIndex = _expJacob[k];
-        if (jacIndex >= (int)unorderedLower.size())
-            jacIndex = unorderedLower.size() - 1;
-        while (jacIndex >= 0 && inserted[jacIndex])
-            jacIndex--;
-        if (jacIndex < 0)
-            break;
-        inserted[jacIndex] = true;
-
-        int    upperbound    = orderedUpper[jacIndex];
-        size_t upperboundPos = toSliceNext.size();
-        if (upperbound != -1)
-            upperboundPos = std::lower_bound(toSliceNext.begin(), toSliceNext.end(), upperbound)
-                            - toSliceNext.begin();
-
+    for (size_t k = 0; k < currentExpJacob.size(); k++) {
+        int jacIndex = currentExpJacob[k];
+        int upperbound = orderedUpper[jacIndex];
+        size_t upperboundPos = 0;
+        // orphan: full chain search
+        if (upperbound == -1)
+            upperboundPos = toSliceNext.size();
+        // otherwise find the upperbound position
+        else
+            for (size_t i = 0; i < toSliceNext.size(); i++) {
+                if (toSliceNext[i] == upperbound) {
+                    upperboundPos = i;
+                    break;
+                }
+            }
+        // std::cout << "Inserting " << unorderedLower[jacIndex] << ", upperbound = " << upperbound << ", upperboundPos = " << upperboundPos << std::endl;
         binaryInsertD(toSliceNext, upperboundPos, unorderedLower[jacIndex]);
     }
     return toSliceNext;
@@ -241,7 +260,7 @@ std::deque<int> PmergeMe::sortAlgoD(std::deque<int> toSlice) {
 /* ************************************************************************** */
 
 void PmergeMe::binaryInsertV(std::vector<int>& sorted, size_t upperBoundIndex, int toInsert) {
-    size_t left  = 0;
+    size_t left = 0;
     size_t right = upperBoundIndex;
 
     while (left < right) {
@@ -260,7 +279,7 @@ void PmergeMe::binaryInsertV(std::vector<int>& sorted, size_t upperBoundIndex, i
 }
 
 void PmergeMe::binaryInsertD(std::deque<int>& sorted, size_t upperBoundIndex, int toInsert) {
-    size_t left  = 0;
+    size_t left = 0;
     size_t right = upperBoundIndex;
 
     while (left < right) {
